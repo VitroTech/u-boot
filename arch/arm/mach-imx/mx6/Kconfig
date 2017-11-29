@@ -639,6 +639,15 @@ config TARGET_UDOO_NEO
 config TARGET_SOFTING_VINING_2000
 	bool "Softing VIN|ING 2000"
 	depends on MX6SX
+
+config TARGET_CRYSTAL
+	bool "Vitro Crystal"
+	depends on MX6QDL
+	select SUPPORT_SPL
+	select BOARD_LATE_INIT
+
+config TARGET_SAMTEC_VINING_2000
+	bool "samtec VIN|ING 2000"
 	select BOARD_LATE_INIT
 	select DM
 	select DM_THERMAL
@@ -730,6 +739,7 @@ source "board/toradex/colibri-imx6ull/Kconfig"
 source "board/k+p/kp_imx6q_tpc/Kconfig"
 source "board/udoo/Kconfig"
 source "board/udoo/neo/Kconfig"
+source "board/vitro/crystal/Kconfig"
 source "board/wandboard/Kconfig"
 source "board/BuR/brppt2/Kconfig"
 source "board/out4/o4-imx6ull-nano/Kconfig"
