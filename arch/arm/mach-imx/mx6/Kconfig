@@ -405,6 +405,12 @@ config TARGET_UDOO_NEO
 	select DM
 	select DM_THERMAL
 
+config TARGET_CRYSTAL
+	bool "Vitro Crystal"
+	select SUPPORT_SPL
+	select MX6QDL
+	select BOARD_LATE_INIT
+
 config TARGET_SAMTEC_VINING_2000
 	bool "samtec VIN|ING 2000"
 	select BOARD_LATE_INIT
@@ -495,6 +501,7 @@ source "board/toradex/apalis_imx6/Kconfig"
 source "board/toradex/colibri_imx6/Kconfig"
 source "board/udoo/Kconfig"
 source "board/udoo/neo/Kconfig"
+source "board/vitro/crystal/Kconfig"
 source "board/wandboard/Kconfig"
 source "board/warp/Kconfig"
 
