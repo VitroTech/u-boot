@@ -638,8 +638,8 @@ config TARGET_UDOO_NEO
 
 config TARGET_CRYSTAL
 	bool "Vitro Crystal"
+	depends on MX6QDL
 	select SUPPORT_SPL
-	select MX6QDL
 	select BOARD_LATE_INIT
 
 config TARGET_SOFTING_VINING_2000
