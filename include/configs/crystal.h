@@ -103,7 +103,6 @@
 
 
 /* Physical Memory Map */
-#define CONFIG_NR_DRAM_BANKS		1
 #define CONFIG_SYS_MAX_FLASH_BANKS	1
 #define CONFIG_SYS_MALLOC_LEN		(10 * SZ_1M)
 #define PHYS_SDRAM			MMDC0_ARB_BASE_ADDR
@@ -115,10 +114,5 @@
 
 #define CONFIG_SYS_INIT_SP_ADDR \
 	(CONFIG_SYS_INIT_RAM_ADDR + CONFIG_SYS_INIT_SP_OFFSET)
-
-/* mtest command - simple memtest */
-#define CONFIG_SYS_MEMTEST_START       PHYS_SDRAM
-#define CONFIG_SYS_MEMTEST_END         0x10010000
-#define CONFIG_SYS_MEMTEST_SCRATCH     0x10800000
 
 #endif /* __CRYSTAL_BOARD_CONFIG_H__ */
