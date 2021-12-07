@@ -1,8 +1,5 @@
 if TARGET_CRYSTAL
 
-config MX6QDL
-       default y
-
 config IMX_CONFIG
        default "arch/arm/mach-imx/spl_sd.cfg"
 
