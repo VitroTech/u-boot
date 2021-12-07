@@ -642,7 +642,7 @@ config TARGET_SOFTING_VINING_2000
 
 config TARGET_CRYSTAL
 	bool "Vitro Crystal"
-	depends on MX6QDL
+	depends on MX6DL
 	select SUPPORT_SPL
 	select BOARD_LATE_INIT
 
