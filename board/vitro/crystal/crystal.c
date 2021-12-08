@@ -28,7 +28,7 @@
 #include <malloc.h>
 #include <netdev.h>
 #include <miiphy.h>
-
+#include <linux/delay.h>
 
 /* It can be used before RAM is initialized
  * It is general purpose register, used in code with "gd" variable (r9 for
