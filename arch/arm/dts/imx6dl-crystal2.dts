@@ -1,0 +1,115 @@
+/*
+ * Device Tree file for vitro Crystal 2 board
+ * Copyright (C) 2017 Maciej Pijanowski <maciej.pijanowski@3mdeb.com>
+ * Based on work by Russell King and Rabeeh Khoury for Hummingboard
+ *
+ * This file is dual-licensed: you can use it either under the terms
+ * of the GPL or the X11 license, at your option. Note that this dual
+ * licensing only applies to this file, and not this project as a
+ * whole.
+ *
+ *  a) This file is free software; you can redistribute it and/or
+ *     modify it under the terms of the GNU General Public License as
+ *     published by the Free Software Foundation; either version 2 of the
+ *     License.
+ *
+ *     This file is distributed in the hope that it will be useful
+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *     GNU General Public License for more details.
+ *
+ * Or, alternatively
+ *
+ *  b) Permission is hereby granted, free of charge, to any person
+ *     obtaining a copy of this software and associated documentation
+ *     files (the "Software"), to deal in the Software without
+ *     restriction, including without limitation the rights to use
+ *     copy, modify, merge, publish, distribute, sublicense, and/or
+ *     sell copies of the Software, and to permit persons to whom the
+ *     Software is furnished to do so, subject to the following
+ *     conditions:
+ *
+ *     The above copyright notice and this permission notice shall be
+ *     included in all copies or substantial portions of the Software.
+ *
+ *     THE SOFTWARE IS PROVIDED , WITHOUT WARRANTY OF ANY KIND
+ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY
+ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+ *     OTHER DEALINGS IN THE SOFTWARE.
+ */
+/dts-v1/;
+
+#include "imx6dl.dtsi"
+#include "imx6dl-crystal.dtsi"
+
+/ {
+	model = "Vitro Crystal2";
+	compatible = "vitro,crystal2", "fsl,imx6dl";
+};
+
+&iomuxc {
+	crystal2 {
+		pinctrl_hog: hoggrp {
+		fsl,pins = <
+				/*
+				 * 10 pin header (J11) GPIO description. The
+				 * pins numbering as following -
+				 *
+				 *	first pin   >	3.3V	60
+				 *			61	64
+				 *			65	72
+				 *			73	166
+				 *			GND	132
+				 *
+				 * The GPIO numbers can be extracted using
+				 * signal name from below.
+				 * Example -
+				 * MX6QDL_PAD_EIM_DA10__GPIO3_IO10 is
+				 * GPIO(3,10) which is (3-1)*32+10 = gpio 74
+				 *
+				 * i.e. The mapping of GPIO(X,Y) to Linux gpio
+				 * number is : gpio number = (X-1) * 32 + Y
+				 */
+
+				/* 0x130b1:
+				 * hysteresis enabled, 100K pull down, medium
+				 * speed (100MHz), 43_OHM Drive Strength,
+				 * Fast Slew Rate */
+
+				/* USR_GPIO0 */
+				MX6QDL_PAD_EIM_EB0__GPIO2_IO28 0x130b1
+				/* USR_GPIO1 */
+				MX6QDL_PAD_EIM_EB1__GPIO2_IO29 0x130b1
+				/* USR_GPIO2 */
+				MX6QDL_PAD_EIM_DA0__GPIO3_IO00 0x130b1
+				/* USR_GPIO3 */
+				MX6QDL_PAD_EIM_DA1__GPIO3_IO01 0x130b1
+				/* USR_GPIO4 */
+				MX6QDL_PAD_EIM_DA8__GPIO3_IO08 0x130b1
+				/* USR_GPIO5 */
+				MX6QDL_PAD_EIM_DA9__GPIO3_IO09 0x130b1
+				/* USR_GPIO6 */
+				MX6QDL_PAD_EIM_A23__GPIO6_IO06 0x130b1
+				/* USR_GPIO7 */
+				MX6QDL_PAD_EIM_A24__GPIO5_IO04 0x130b1
+
+				/* J10 header
+				 *	first pin   >	3.3V
+				 *			201
+				 *			GND
+				 */
+				MX6QDL_PAD_SD4_CMD__GPIO7_IO09 0x130b1
+
+				/* Pull-up mPCIe GSM modem rst and wake lines */
+				/*  mPCIe2 MC5728_WAKE_EN */
+				MX6QDL_PAD_EIM_A19__GPIO2_IO19 0x1b0b1
+				/*  mPCIe2 MC5728_EXT_RST_N */
+				MX6QDL_PAD_EIM_A20__GPIO2_IO18 0x1b0b1
+			>;
+		};
+	};
+};
