@@ -793,6 +793,8 @@ dtb-y += \
 	imx6dl-hummingboard2.dtb \
 	imx6dl-hummingboard2-emmc-som-v15.dtb \
 	imx6dl-hummingboard2-som-v15.dtb \
+	imx6dl-crystal2.dtb \
+	imx6dl-crystal3.dtb \
 	imx6dl-hummingboard.dtb \
 	imx6dl-hummingboard-emmc-som-v15.dtb \
 	imx6dl-hummingboard-som-v15.dtb \
