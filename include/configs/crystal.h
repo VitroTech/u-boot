@@ -17,8 +17,8 @@
 #define CONSOLE_DEV	"ttymxc0"
 
 /* MMC */
-#define CONFIG_SYS_FSL_USDHC_NUM	1
-#define CONFIG_SYS_FSL_ESDHC_ADDR	USDHC2_BASE_ADDR
+#define CONFIG_SYS_FSL_USDHC_NUM	2
+#define CONFIG_SYS_FSL_ESDHC_ADDR	USDHC3_BASE_ADDR
 
 /* Ethernet Configuration */
 #define IMX_FEC_BASE			ENET_BASE_ADDR
@@ -93,7 +93,7 @@
 	BOOTENV
 
 #define BOOT_TARGET_DEVICES(func) \
-	func(MMC, mmc, 1) \
+	func(MMC, mmc, 2) \
 	func(USB, usb, 0) \
 	func(PXE, pxe, na) \
 	func(DHCP, dhcp, na)
