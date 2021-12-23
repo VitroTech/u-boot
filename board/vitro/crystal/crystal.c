@@ -66,9 +66,28 @@ static iomux_v3_cfg_t const usdhc2_pads[] = {
 	IOMUX_PADS(PAD_GPIO_4__GPIO1_IO04	| MUX_PAD_CTRL(NO_PAD_CTRL)), /* CD */
 };
 
-/* one uSD card slot */
-static struct fsl_esdhc_cfg usdhc_cfg[1] = {
-       {.esdhc_base = USDHC2_BASE_ADDR},
+static iomux_v3_cfg_t const usdhc3_pads[] = {
+	IOMUX_PADS(PAD_SD3_CLK__SD3_CLK	| MUX_PAD_CTRL(USDHC_PAD_CTRL)),
+	IOMUX_PADS(PAD_SD3_CMD__SD3_CMD	| MUX_PAD_CTRL(USDHC_PAD_CTRL)),
+	IOMUX_PADS(PAD_SD3_DAT0__SD3_DATA0 | MUX_PAD_CTRL(USDHC_PAD_CTRL)),
+	IOMUX_PADS(PAD_SD3_DAT1__SD3_DATA1	| MUX_PAD_CTRL(USDHC_PAD_CTRL)),
+	IOMUX_PADS(PAD_SD3_DAT2__SD3_DATA2	| MUX_PAD_CTRL(USDHC_PAD_CTRL)),
+	IOMUX_PADS(PAD_SD3_DAT3__SD3_DATA3	| MUX_PAD_CTRL(USDHC_PAD_CTRL)),
+	IOMUX_PADS(PAD_SD3_DAT4__SD3_DATA4	| MUX_PAD_CTRL(USDHC_PAD_CTRL)),
+	IOMUX_PADS(PAD_SD3_DAT5__SD3_DATA5	| MUX_PAD_CTRL(USDHC_PAD_CTRL)),
+	IOMUX_PADS(PAD_SD3_DAT6__SD3_DATA6	| MUX_PAD_CTRL(USDHC_PAD_CTRL)),
+	IOMUX_PADS(PAD_SD3_DAT7__SD3_DATA7	| MUX_PAD_CTRL(USDHC_PAD_CTRL)),
+};
+
+
+#define CRYSTAL_USDHC_USD_IDX	0
+#define CRYSTAL_USDHC_EMMC_IDX	1
+#define CRYSTAL_USDHC_USD_BASE	USDHC2_BASE_ADDR
+#define CRYSTAL_USDHC_EMMC_BASE	USDHC3_BASE_ADDR
+
+static struct fsl_esdhc_cfg usdhc_cfg[CONFIG_SYS_FSL_USDHC_NUM] = {
+       {.esdhc_base = CRYSTAL_USDHC_USD_BASE},
+       {.esdhc_base = CRYSTAL_USDHC_EMMC_BASE},
 };
 
 /* port 1 pad 4 */
@@ -76,12 +95,21 @@ static struct fsl_esdhc_cfg usdhc_cfg[1] = {
 
 int board_mmc_getcd(struct mmc *mmc)
 {
+	struct fsl_esdhc_cfg *cfg = (struct fsl_esdhc_cfg *)mmc->priv;
 	int ret = 0;
 
-	if (usdhc_cfg[0].esdhc_base == USDHC2_BASE_ADDR) {
-	      /* signal is low if card is inserted */
-	      ret = !gpio_get_value(USDHC2_CD_GPIO);
+	switch (cfg->esdhc_base) {
+	case CRYSTAL_USDHC_USD_BASE:
+		/* signal is low if card is inserted */
+		ret = !gpio_get_value(USDHC2_CD_GPIO);
+		break;
+	case CRYSTAL_USDHC_EMMC_BASE :
+		/* Assume eMMC is always present */
+		ret = 1;
+		break;
 	}
+
+	return ret;
 
 	/* return 0 if card not inserted or unknown esdhc_base */
 	return ret;
@@ -89,12 +117,37 @@ int board_mmc_getcd(struct mmc *mmc)
 
 int board_mmc_init(struct bd_info *bis)
 {
-	SETUP_IOMUX_PADS(usdhc2_pads);
-	usdhc_cfg[0].esdhc_base = USDHC2_BASE_ADDR;
-	usdhc_cfg[0].sdhc_clk = mxc_get_clock(MXC_ESDHC2_CLK);
-	gd->arch.sdhc_clk = usdhc_cfg[0].sdhc_clk;
+	int i, ret;
 
-	return fsl_esdhc_initialize(bis, &usdhc_cfg[0]);
+	/*
+	 * (U-Boot device node)    (device)
+	 * mmc1                    USDHC2 (uSD card)
+	 * mmc2                    USDHC3 (eMMC)
+	 */
+	for (i = 0; i < CONFIG_SYS_FSL_USDHC_NUM; i++) {
+		switch (i) {
+		case CRYSTAL_USDHC_USD_IDX:
+			SETUP_IOMUX_PADS(usdhc2_pads);
+			usdhc_cfg[CRYSTAL_USDHC_USD_IDX].sdhc_clk = mxc_get_clock(MXC_ESDHC2_CLK);
+			break;
+		case CRYSTAL_USDHC_EMMC_IDX:
+			SETUP_IOMUX_PADS(usdhc3_pads);
+			usdhc_cfg[CRYSTAL_USDHC_EMMC_IDX].sdhc_clk = mxc_get_clock(MXC_ESDHC3_CLK);
+			break;
+		default:
+			printf("Warning: you configured more USDHC controllers"
+				"(%d) than supported by the board\n", i + 1);
+			return -EINVAL;
+		}
+
+		ret = fsl_esdhc_initialize(bis, &usdhc_cfg[i]);
+		if (ret) {
+			printf("Warning: failed to initialize mmc dev %d\n", i);
+			return ret;
+		}
+	}
+
+	return 0;
 }
 
 /*** Ethernet ***/
@@ -509,6 +562,20 @@ void spl_board_init()
 	/* UART clocks enabled and gd valid - init serial console */
 	/* common/spl/spl.c */
 	preloader_console_init();
+}
+
+void board_boot_order(u32 *spl_boot_list)
+{
+	switch (spl_boot_device()) {
+	case BOOT_DEVICE_MMC2:
+	case BOOT_DEVICE_MMC1:
+		/* Pririotize eMMC boot */
+		spl_boot_list[0] = BOOT_DEVICE_MMC2;
+		spl_boot_list[1] = BOOT_DEVICE_MMC1;
+		break;
+	default:
+		spl_boot_list[0] = spl_boot_device();
+	}
 }
 
 #endif /* CONFIG_SPL_BUILD */
