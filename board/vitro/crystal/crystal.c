@@ -24,11 +24,11 @@
 #include <asm/mach-imx/iomux-v3.h>
 #include <asm/mach-imx/video.h>
 #include <mmc.h>
-#include <fsl_esdhc.h>
+#include <fsl_esdhc_imx.h>
 #include <malloc.h>
 #include <netdev.h>
 #include <miiphy.h>
-
+#include <linux/delay.h>
 
 /* It can be used before RAM is initialized
  * It is general purpose register, used in code with "gd" variable (r9 for
@@ -87,7 +87,7 @@ int board_mmc_getcd(struct mmc *mmc)
 	return ret;
 }
 
-int board_mmc_init(bd_t *bis)
+int board_mmc_init(struct bd_info *bis)
 {
 	SETUP_IOMUX_PADS(usdhc2_pads);
 	usdhc_cfg[0].esdhc_base = USDHC2_BASE_ADDR;
@@ -157,7 +157,7 @@ int board_phy_config(struct phy_device *phydev)
 /* On Vitro Crystal board Ethernet PHY is located at address 0x0 */
 #define ETH_PHY_MASK	(1 << 0x0)
 
-int board_eth_init(bd_t *bis)
+int board_eth_init(struct bd_info *bis)
 {
 	struct iomuxc *const iomuxc_regs = (struct iomuxc *)IOMUXC_BASE_ADDR;
 	struct mii_dev *bus;

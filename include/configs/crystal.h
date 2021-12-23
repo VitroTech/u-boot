@@ -18,11 +18,9 @@
 
 /* MMC */
 #define CONFIG_SYS_FSL_USDHC_NUM	1
-#define CONFIG_SYS_MMC_ENV_DEV		0	/* SDHC2 */
 #define CONFIG_SYS_FSL_ESDHC_ADDR	USDHC2_BASE_ADDR
 
 /* Ethernet Configuration */
-#define CONFIG_MII
 #define IMX_FEC_BASE			ENET_BASE_ADDR
 #define CONFIG_FEC_XCV_TYPE		RGMII
 #define CONFIG_FEC_MXC_PHYADDR		0
@@ -95,7 +93,7 @@
 	BOOTENV
 
 #define BOOT_TARGET_DEVICES(func) \
-	func(MMC, mmc, 0) \
+	func(MMC, mmc, 1) \
 	func(USB, usb, 0) \
 	func(PXE, pxe, na) \
 	func(DHCP, dhcp, na)
@@ -104,7 +102,6 @@
 
 
 /* Physical Memory Map */
-#define CONFIG_NR_DRAM_BANKS		1
 #define CONFIG_SYS_MAX_FLASH_BANKS	1
 #define CONFIG_SYS_MALLOC_LEN		(10 * SZ_1M)
 #define PHYS_SDRAM			MMDC0_ARB_BASE_ADDR
@@ -117,15 +114,7 @@
 #define CONFIG_SYS_INIT_SP_ADDR \
 	(CONFIG_SYS_INIT_RAM_ADDR + CONFIG_SYS_INIT_SP_OFFSET)
 
-/* mtest command - simple memtest */
-#define CONFIG_SYS_MEMTEST_START       PHYS_SDRAM
-#define CONFIG_SYS_MEMTEST_END         0x10010000
-#define CONFIG_SYS_MEMTEST_SCRATCH     0x10800000
-
 /* Environment organization */
-#define CONFIG_ENV_SIZE			(8 * 1024)
-#define CONFIG_ENV_OFFSET		(8 * 64 * 1024)
 #define CONFIG_ENV_VARS_UBOOT_RUNTIME_CONFIG
-#define CONFIG_ENV_OFFSET_REDUND CONFIG_ENV_OFFSET + CONFIG_ENV_SIZE
 
 #endif /* __CRYSTAL_BOARD_CONFIG_H__ */
