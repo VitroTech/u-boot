@@ -11,6 +11,7 @@
 
 #include "mx6_common.h"
 #include "imx6_spl.h"
+#include <linux/stringify.h>
 
 /* UART */
 #define CONFIG_MXC_UART_BASE	UART1_BASE
@@ -52,9 +53,9 @@
 	"fdtfile=undefined\0" \
 	"fdt_addr_r=0x18000000\0" \
 	"fdt_addr=0x18000000\0" \
-	"kernel_addr_r=" __stringify(CONFIG_LOADADDR) "\0"  \
-	"pxefile_addr_r=" __stringify(CONFIG_LOADADDR) "\0" \
-	"scriptaddr=" __stringify(CONFIG_LOADADDR) "\0" \
+	"kernel_addr_r=0x12000000\0"  \
+	"pxefile_addr_r=0x12000000\0" \
+	"scriptaddr=0x12000000\0" \
 	"ramdisk_addr_r=0x13000000\0" \
 	"ramdiskaddr=0x13000000\0" \
 	"initrd_high=0xffffffff\0" \
