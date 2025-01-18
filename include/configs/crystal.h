@@ -11,7 +11,9 @@
 
 #include "mx6_common.h"
 #include "imx6_spl.h"
-#include <linux/stringify.h>
+
+
+
 
 /* UART */
 #define CONFIG_MXC_UART_BASE	UART1_BASE
@@ -19,6 +21,8 @@
 
 /* MMC */
 #define CONFIG_SYS_FSL_USDHC_NUM	2
+
+#define CONFIG_SYS_MMC_ENV_PART		0	/* eMMC user area */
 #define CONFIG_SYS_FSL_ESDHC_ADDR	USDHC3_BASE_ADDR
 
 /* Framebuffer */
@@ -109,6 +113,9 @@
 	(CONFIG_SYS_INIT_RAM_ADDR + CONFIG_SYS_INIT_SP_OFFSET)
 
 /* Environment organization */
+
+
 #define CONFIG_ENV_VARS_UBOOT_RUNTIME_CONFIG
+
 
 #endif /* __CRYSTAL_BOARD_CONFIG_H__ */

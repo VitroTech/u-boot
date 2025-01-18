@@ -9,6 +9,13 @@
  * SPDX-License-Identifier:	GPL-2.0+
  */
 
+
+
+/* U-Boot includes */
+#include <init.h>
+#include <env.h>
+
+
 #include <linux/types.h>
 #include <asm/arch/clock.h>
 #include <asm/arch/imx-regs.h>
@@ -27,6 +34,9 @@
 #include <fsl_esdhc_imx.h>
 #include <malloc.h>
 #include <linux/delay.h>
+#include <watchdog.h>
+
+
 
 /* It can be used before RAM is initialized
  * It is general purpose register, used in code with "gd" variable (r9 for
@@ -270,6 +280,9 @@ static int setup_fec(void)
 
 int board_early_init_f(void)
 {
+	
+
+
 	int ret = 0;
 	setup_iomux_uart();
 
@@ -496,3 +509,7 @@ void board_boot_order(u32 *spl_boot_list)
 }
 
 #endif /* CONFIG_SPL_BUILD */
+
+__weak void reset_cpu(ulong addr)
+{
+}
